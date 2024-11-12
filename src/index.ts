@@ -19,6 +19,14 @@ export function hello(): string {
   return ExpoUrovoScannerModule.hello();
 }
 
+export function scan(): void {
+  ExpoUrovoScannerModule.scan();
+}
+
+export function scanner(): void {
+  return ExpoUrovoScannerModule.scanner();
+}
+
 export async function setValueAsync(value: string) {
   return await ExpoUrovoScannerModule.setValueAsync(value);
 }
