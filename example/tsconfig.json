@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "expo-urovo-scanner-module": ["../src/index"],
+      "expo-urovo-scanner-module/*": ["../src/*"]
+    }
+  }
+}
