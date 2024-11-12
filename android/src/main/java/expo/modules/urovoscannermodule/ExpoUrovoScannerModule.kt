@@ -38,8 +38,6 @@ class ExpoUrovoScannerModule : Module() {
       val mScanManager = ScanManager()
       var powerOn = mScanManager.scannerState
 
-      Log.d("powerOn", powerOn.toString())
-
       mScanManager?.startDecode()
 
     }
