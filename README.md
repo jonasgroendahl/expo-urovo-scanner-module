@@ -1,35 +1,67 @@
 # expo-urovo-scanner-module
 
-A Expo Module that communicates with Urovo scanners
+A Expo Module for Android that communicates with Urovo scanners.
 
-# API documentation
-
-- [Documentation for the main branch](https://github.com/expo/expo/blob/main/docs/pages/versions/unversioned/sdk/urovo-scanner-module.md)
-- [Documentation for the latest stable release](https://docs.expo.dev/versions/latest/sdk/urovo-scanner-module/)
-
-# Installation in managed Expo projects
-
-For [managed](https://docs.expo.dev/archive/managed-vs-bare/) Expo projects, please follow the installation instructions in the [API documentation for the latest stable release](#api-documentation). If you follow the link and there is no documentation available then this library is not yet usable within managed projects &mdash; it is likely to be included in an upcoming Expo SDK release.
-
-# Installation in bare React Native projects
-
-For bare React Native projects, you must ensure that you have [installed and configured the `expo` package](https://docs.expo.dev/bare/installing-expo-modules/) before continuing.
-
-### Add the package to your npm dependencies
+## Add the package to your npm dependencies
 
 ```
 npm install expo-urovo-scanner-module
 ```
 
-### Configure for iOS
+## How to use
 
-Run `npx pod-install` after installing the npm package.
+This package exposes 2 methods `scanner` for initializing the scanner and `addChangeListener` for attaching a listener for scan events, which then can be acted upon.
+
+Example usage:
+
+```
+import {
+  addChangeListener,
+  ChangeEventPayload,
+  scanner,
+} from "expo-urovo-scanner-module";
+
+const [isScannerReady, setIsScannerReady] = useState(false);
+
+const handleScanEvent = useCallback(
+    (val: ChangeEventPayload) => {
+
+    // do something
+}, [])
 
 
-### Configure for Android
+useEffect(() => {
+    console.log("[Scanner] Setting up listener, ready:", isScannerReady);
+
+    let sub: Subscription | undefined;
+
+    if (isScannerReady) {
+      if (__DEV__) {
+        console.log("[Scanner] Skipping listener in dev mode");
+      } else {
+        sub = addChangeListener(handleScanEvent);
+        console.log("[Scanner] Listener added");
+      }
+    }
+
+    return () => {
+      if (sub) {
+        console.log("[Scanner] Cleaning up listener");
+        sub.remove();
+      }
+    };
+  }, [isScannerReady, handleScanEvent]);
 
 
+useEffect(() => {
+    if (!__DEV__) {
+        scanner();
+    }
+    setIsScannerReady(true);
+}, []);
+```
 
-# Contributing
+## Links
 
-Contributions are very welcome! Please refer to guidelines described in the [contributing guide]( https://github.com/expo/expo#contributing).
+- Developer docs: https://en.urovo.com/developer/index.html
+- Example projects with Java package: https://github.com/urovosamples/SDK_ReleaseforAndroid/tree/master/Samples/ScanManager (All example usage was written in Java, the logic for this module has been written in Kotlin and exposed as an Expo module.)
