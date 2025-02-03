@@ -6,6 +6,8 @@ import expo.modules.kotlin.modules.ModuleDefinition
 // Import Urovo SDK classes (Java classes) in Kotlin
 import android.device.ScanManager
 
+import android.device.scanner.configuration.PropertyID
+
 // Import Android framework classes
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -44,6 +46,11 @@ class ExpoUrovoScannerModule : Module() {
       var powerOn = mScanManager?.scannerState
 
       mScanManager?.switchOutputMode(0) // DECODE_OUTPUT_MODE_INTENT = 0
+
+      val index = intArrayOf(PropertyID.GOOD_READ_BEEP_ENABLE)
+      val value = intArrayOf(1)
+
+      mScanManager.setParameterInts(index, value)
 
       registerReceiver()
     }
