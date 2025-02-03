@@ -50,7 +50,7 @@ class ExpoUrovoScannerModule : Module() {
       val index = intArrayOf(PropertyID.GOOD_READ_BEEP_ENABLE)
       val value = intArrayOf(1)
 
-      mScanManager.setParameterInts(index, value)
+      mScanManager?.setParameterInts(index, value)
 
       registerReceiver()
     }

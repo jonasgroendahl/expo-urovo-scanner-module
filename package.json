@@ -1,6 +1,6 @@
 {
   "name": "expo-urovo-scanner-module",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "A Expo Module that communicates with Urovo scanners",
   "main": "build/index.js",
   "types": "build/index.d.ts",
