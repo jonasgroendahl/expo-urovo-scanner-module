@@ -6,6 +6,9 @@ import expo.modules.kotlin.modules.ModuleDefinition
 // Import Urovo SDK classes (Java classes) in Kotlin
 import android.device.ScanManager
 
+// Attempt: Add Beep func
+// import android.device.scanner.configuration.PropertyID
+
 // Import Android framework classes
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -40,16 +43,53 @@ class ExpoUrovoScannerModule : Module() {
     }
 
     Function("scanner") {
-      mScanManager = ScanManager()
-      var powerOn = mScanManager?.scannerState
+      if (mScanManager == null) {
+        try {
+          mScanManager = ScanManager()
+          var powerOn = mScanManager?.scannerState
 
-      mScanManager?.switchOutputMode(0) // DECODE_OUTPUT_MODE_INTENT = 0
+          mScanManager?.switchOutputMode(0) // DECODE_OUTPUT_MODE_INTENT = 0
 
-      registerReceiver()
+          // Attempt to add beep, uncommented it for now, not sure if it's working
+          // val index = intArrayOf(PropertyID.GOOD_READ_BEEP_ENABLE)
+          // val value = intArrayOf(1)
+          // mScanManager?.setParameterInts(index, value)
+
+          registerReceiver()
+          Log.d("ExpoUrovoScannerModule", "Scanner initialized successfully")
+        } catch (e: Exception) {
+          Log.e("ExpoUrovoScannerModule", "Failed to initialize scanner: ${e.message}")
+          throw e
+        }
+      } else {
+        Log.d("ExpoUrovoScannerModule", "Scanner already initialized")
+      }
     }
 
     Function("scan") {
-      mScanManager?.startDecode()
+      try {
+        if (mScanManager == null) {
+          throw Exception("Scanner not initialized. Call scanner() first.")
+        }
+        mScanManager?.startDecode()
+        Log.d("ExpoUrovoScannerModule", "Scan started")
+      } catch (e: Exception) {
+        Log.e("ExpoUrovoScannerModule", "Failed to start decode: ${e.message}")
+        throw e
+      }
+    }
+
+    Function("stopScan") {
+      try {
+        if (mScanManager == null) {
+          throw Exception("Scanner not initialized. Call scanner() first.")
+        }
+        mScanManager?.stopDecode()
+        Log.d("ExpoUrovoScannerModule", "Scan stopped")
+      } catch (e: Exception) {
+        Log.e("ExpoUrovoScannerModule", "Failed to stop decode: ${e.message}")
+        throw e
+      }
     }
 
     // Defines a JavaScript function that always returns a Promise and whose native code
@@ -62,7 +102,13 @@ class ExpoUrovoScannerModule : Module() {
     }
 
     OnDestroy {
+      try {
+        mScanManager?.stopDecode() // Stop any ongoing decode operations
+      } catch (e: Exception) {
+        Log.w("ExpoUrovoScannerModule", "Error stopping decode on destroy: ${e.message}")
+      }
       unregisterReceiver()
+      mScanManager = null
     }
   }
 

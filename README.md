@@ -65,3 +65,9 @@ useEffect(() => {
 
 - Developer docs: https://en.urovo.com/developer/index.html
 - Example projects with Java package: https://github.com/urovosamples/SDK_ReleaseforAndroid/tree/master/Samples/ScanManager (All example usage was written in Java, the logic for this module has been written in Kotlin and exposed as an Expo module.)
+
+## Timeline
+
+v.10 works!
+v.12 attempt to get sound working
+v.13 perf gains
